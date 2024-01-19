@@ -1,7 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
-import { response } from "express";
 import fs from "fs";
-import { url } from "inspector";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -13,11 +11,12 @@ const uploadOnCloudinary = async (loacFilePath) => {
   try {
     if (!loacFilePath) return null;
     // upload file on cloudinary
-    await cloudinary.uploader.upload(loacFilePath, {
+    const response = await cloudinary.uploader.upload(loacFilePath, {
       resource_type: "auto",
     });
     // file uploaded successfully
-    console.log("File has been uploaded on clodinary", response.url);
+    //console.log("File has been uploaded on clodinary", response.url);
+    fs.unlinkSync(loacFilePath);
     return response;
   } catch (error) {
     fs.unlinkSync(loacFilePath); // remove localy saved temp file , bea=cause upload function got failed
